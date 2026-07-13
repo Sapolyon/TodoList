@@ -1,0 +1,93 @@
+<div class="page">
+  <header class="navbar">
+    <h1>To-Do List</h1>
+    <span>{{ todos.length }} görev</span>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>{{ editingTodoId ? 'Görevi Düzenle' : 'Yeni Görev' }}</h2>
+
+      <form class="form" (ngSubmit)="saveTodo()">
+        <input
+          type="text"
+          name="title"
+          placeholder="Başlık"
+          [(ngModel)]="title"
+          autocomplete="off">
+
+        <textarea
+          name="description"
+          placeholder="Açıklama"
+          [(ngModel)]="description"></textarea>
+
+        <label class="checkbox-row" *ngIf="editingTodoId">
+          <input
+            type="checkbox"
+            name="isCompleted"
+            [(ngModel)]="isCompleted">
+          Tamamlandı
+        </label>
+
+        <div class="form-actions">
+          <button class="primary-button" type="submit" [disabled]="isSaving">
+            {{ editingTodoId ? 'Güncelle' : 'Ekle' }}
+          </button>
+
+          <button
+            class="secondary-button"
+            type="button"
+            *ngIf="editingTodoId"
+            (click)="clearForm()">
+            İptal
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="section-title">
+        <h2>Görevler</h2>
+        <button class="secondary-button" type="button" (click)="loadTodos()" [disabled]="isLoading">
+          Yenile
+        </button>
+      </div>
+
+      <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+      <p class="empty-message" *ngIf="isLoading && todos.length === 0">Görevler yükleniyor...</p>
+      <p class="empty-message" *ngIf="!isLoading && todos.length === 0">Henüz görev yok.</p>
+
+      <div class="todo-list" *ngIf="todos.length > 0">
+        <article
+          class="todo-item"
+          *ngFor="let todo of todos; trackBy: trackByTodoId"
+          [class.completed]="todo.isCompleted">
+          <div class="todo-info">
+            <div class="todo-header">
+              <h3>{{ todo.title }}</h3>
+              <span class="status" [class.done]="todo.isCompleted">
+                {{ todo.isCompleted ? 'Tamamlandı' : 'Tamamlanmadı' }}
+              </span>
+            </div>
+
+            <p>{{ todo.description }}</p>
+          </div>
+
+          <div class="todo-actions">
+            <button class="secondary-button" type="button" (click)="toggleCompleted(todo)">
+              {{ todo.isCompleted ? 'Geri Al' : 'Tamamla' }}
+            </button>
+
+            <button type="button" (click)="startEdit(todo)">
+              Düzenle
+            </button>
+
+            <button class="danger-button" type="button" (click)="deleteTodo(todo.id)">
+              Sil
+            </button>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+</div>
