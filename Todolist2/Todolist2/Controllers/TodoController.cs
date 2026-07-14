@@ -56,11 +56,11 @@ namespace Todolist2.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTodoCommand command)
+        public async Task<IActionResult> Update(
+            Guid id,
+            [FromBody] UpdateTodoCommand command)
         {
-            command.Id = id;
-
-            var isUpdated = await _updateHandler.HandleAsync(command);
+            var isUpdated = await _updateHandler.HandleAsync(id, command);
 
             if (!isUpdated)
                 return NotFound();

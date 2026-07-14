@@ -12,9 +12,11 @@ namespace Todolist2.Application.CommandHandlers
             _repository = repository;
         }
 
-        public async Task<bool> HandleAsync(UpdateTodoCommand command)
+        public async Task<bool> HandleAsync(
+            Guid id,
+            UpdateTodoCommand command)
         {
-            var todo = await _repository.GetByIdAsync(command.Id);
+            var todo = await _repository.GetByIdAsync(id);
 
             if (todo == null)
                 return false;
