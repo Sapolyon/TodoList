@@ -2,12 +2,12 @@
 
 namespace Todolist2.Infrastructure.Repositories;
 
-    public interface InToDoRepositories
+    public interface IToDoRepository
     {
         Task<List<Todo>> GetAllTodosAsync();
         Task<Todo?> GetByIdAsync(Guid id);
         Task AddAsync (Todo todo);
         Task UpdateAsync(Todo todo);
-        Task DeleteAsync(Guid id);
+        Task<bool> DeleteAsync(Guid id);
     }
 

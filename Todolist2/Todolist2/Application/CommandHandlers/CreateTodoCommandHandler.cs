@@ -4,16 +4,16 @@ using Todolist2.Infrastructure.Repositories;
 
 namespace Todolist2.Application.CommandHandlers
 {
-    public class CTodoCommandHandlers
+    public class CreateTodoCommandHandler
     {
-        private readonly InToDoRepositories _repository;
+        private readonly IToDoRepository _repository;
 
-        public CTodoCommandHandlers(InToDoRepositories repository)
+        public CreateTodoCommandHandler(IToDoRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task Handle(CTodocommands command)
+        public async Task<Todo> HandleAsync(CreateTodoCommand command)
         {
             var todo = new Todo
             {
@@ -25,6 +25,7 @@ namespace Todolist2.Application.CommandHandlers
             };
 
             await _repository.AddAsync(todo);
+            return todo;
         }
     }
 }

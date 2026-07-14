@@ -4,11 +4,11 @@ using Todolist2.Infrastructure.Data;
 
 namespace Todolist2.Infrastructure.Repositories;
 
-    public class ToDoRepositories : IToDoRepository
+    public class ToDoRepository : IToDoRepository
 {
         private readonly AppDbContext _context;
 
-        public ToDoRepositories(AppDbContext context)
+        public ToDoRepository(AppDbContext context)
         {
             _context = context;
         }
@@ -30,14 +30,17 @@ namespace Todolist2.Infrastructure.Repositories;
             _context.Todos.Update(todo);
             await _context.SaveChangesAsync();
         }
-        public async Task DeleteAsync(Guid id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
             var todo = await _context.Todos.FindAsync(id);
-            if (todo != null)
+            if (todo == null)
             {
-                _context.Todos.Remove(todo);
-                await _context.SaveChangesAsync();
+                return false;
             }
+
+            _context.Todos.Remove(todo);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 

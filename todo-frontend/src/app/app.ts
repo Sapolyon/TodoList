@@ -55,8 +55,8 @@ export class App implements OnInit {
   }
 
   saveTodo(): void {
-    if (!this.title.trim() || !this.description.trim()) {
-      this.errorMessage = 'Başlık ve açıklama alanları boş bırakılamaz.';
+    if (!this.title.trim()) {
+      this.errorMessage = 'Başlık alanı boş bırakılamaz.';
       this.cdr.detectChanges();
       return;
     }
@@ -113,7 +113,6 @@ export class App implements OnInit {
     }
 
     const todo: UpdateTodoRequest = {
-      id: this.editingTodoId,
       title: this.title.trim(),
       description: this.description.trim(),
       isCompleted: this.isCompleted
@@ -122,7 +121,7 @@ export class App implements OnInit {
     this.isSaving = true;
     this.cdr.detectChanges();
 
-    this.todoService.update(todo.id, todo)
+    this.todoService.update(this.editingTodoId, todo)
       .pipe(finalize(() => {
         this.isSaving = false;
         this.cdr.detectChanges();
@@ -142,7 +141,6 @@ export class App implements OnInit {
 
   toggleCompleted(todo: Todo): void {
     const updatedTodo: UpdateTodoRequest = {
-      id: todo.id,
       title: todo.title,
       description: todo.description,
       isCompleted: !todo.isCompleted
@@ -194,7 +192,7 @@ export class App implements OnInit {
     this.cdr.detectChanges();
   }
 
-  trackByTodoId(index: number, todo: Todo): string {
+  trackByTodoId(_index: number, todo: Todo): string {
     return todo.id;
   }
 }

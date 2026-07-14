@@ -14,12 +14,15 @@
           name="title"
           placeholder="Başlık"
           [(ngModel)]="title"
+          required
+          maxlength="100"
           autocomplete="off">
 
         <textarea
           name="description"
           placeholder="Açıklama"
-          [(ngModel)]="description"></textarea>
+          [(ngModel)]="description"
+          maxlength="500"></textarea>
 
         <label class="checkbox-row" *ngIf="editingTodoId">
           <input

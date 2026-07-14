@@ -3,16 +3,16 @@ using Todolist2.Infrastructure.Repositories;
 
 namespace Todolist2.Application.CommandHandlers
 {
-    public class UTodoCommandHandlers
+    public class UpdateTodoCommandHandler
     {
         private readonly IToDoRepository _repository;
 
-        public UTodoCommandHandlers(IToDoRepository repository)
+        public UpdateTodoCommandHandler(IToDoRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<bool> Handle(UpdateTodoCommand command)
+        public async Task<bool> HandleAsync(UpdateTodoCommand command)
         {
             var todo = await _repository.GetByIdAsync(command.Id);
 

@@ -1,6 +1,6 @@
 ﻿namespace Todolist2.Application.Commands;
 
-    public class DTodocommands
+    public class DeleteTodoCommand
     {
         public Guid Id { get; set; }
     }

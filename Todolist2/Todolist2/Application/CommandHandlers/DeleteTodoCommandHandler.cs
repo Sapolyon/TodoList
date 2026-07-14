@@ -10,9 +10,9 @@ namespace Todolist2.Application.CommandHandlers
         {
             _repository = repository;
         }
-        public async Task HandleAsync(DeleteTodoCommand command)
+        public async Task<bool> HandleAsync(DeleteTodoCommand command)
         {
-         await _repository.DeleteAsync(command.Id);
+            return await _repository.DeleteAsync(command.Id);
         }
 }
 }

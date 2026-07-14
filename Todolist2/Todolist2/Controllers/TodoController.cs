@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Todolist2.Application.CommandHandlers;
 using Todolist2.Application.Commands;
-using Todolist2.Application.QuarieHandlers;
-using Todolist2.Application.Quaries;
+using Todolist2.Application.QueryHandlers;
+using Todolist2.Application.Queries;
 
 namespace Todolist2.Controllers
 {
@@ -10,18 +10,18 @@ namespace Todolist2.Controllers
     [Route("api/[controller]")]
     public class TodoController : ControllerBase
     {
-        private readonly CTodoCommandHandlers _createHandler;
-        private readonly UTodoCommandHandlers _updateHandler;
-        private readonly DTodoCommandHandlers _deleteHandler;
+        private readonly CreateTodoCommandHandler _createHandler;
+        private readonly UpdateTodoCommandHandler _updateHandler;
+        private readonly DeleteTodoCommandHandler _deleteHandler;
         private readonly GetAllTodoQueryHandler _getAllHandler;
-        private readonly GetTodoByIdquarieHandlers _getByIdHandler;
+        private readonly GetTodoByIdQueryHandler _getByIdHandler;
 
         public TodoController(
-            CTodoCommandHandlers createHandler,
-            UTodoCommandHandlers updateHandler,
-            DTodoCommandHandlers deleteHandler,
+            CreateTodoCommandHandler createHandler,
+            UpdateTodoCommandHandler updateHandler,
+            DeleteTodoCommandHandler deleteHandler,
             GetAllTodoQueryHandler getAllHandler,
-            GetTodoByIdquarieHandlers getByIdHandler)
+            GetTodoByIdQueryHandler getByIdHandler)
         {
             _createHandler = createHandler;
             _updateHandler = updateHandler;
@@ -33,14 +33,14 @@ namespace Todolist2.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var todos = await _getAllHandler.Handle();
+            var todos = await _getAllHandler.HandleAsync(new GetAllTodoQuery());
             return Ok(todos);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var todo = await _getByIdHandler.Handle(id);
+            var todo = await _getByIdHandler.HandleAsync(new GetTodoByIdQuery { Id = id });
 
             if (todo == null)
                 return NotFound();
@@ -49,18 +49,18 @@ namespace Todolist2.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CTodocommands command)
+        public async Task<IActionResult> Create(CreateTodoCommand command)
         {
-            await _createHandler.Handle(command);
-            return Ok();
+            var todo = await _createHandler.HandleAsync(command);
+            return CreatedAtAction(nameof(GetById), new { id = todo.Id }, todo);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UTodocommands command)
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTodoCommand command)
         {
             command.Id = id;
 
-            var isUpdated = await _updateHandler.Handle(command);
+            var isUpdated = await _updateHandler.HandleAsync(command);
 
             if (!isUpdated)
                 return NotFound();
@@ -71,8 +71,12 @@ namespace Todolist2.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _deleteHandler.HandleAsync(new DTodocommands { Id = id });
-            return Ok();
+            var isDeleted = await _deleteHandler.HandleAsync(new DeleteTodoCommand { Id = id });
+
+            if (!isDeleted)
+                return NotFound();
+
+            return NoContent();
         }
     }
 }

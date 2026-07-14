@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Todolist2.Application.CommandHandlers;
-using Todolist2.Application.QuarieHandlers;
-using Todolist2.Application.Quaries;
+using Todolist2.Application.QueryHandlers;
 using Todolist2.Infrastructure.Data;
 using Todolist2.Infrastructure.Repositories;
 
@@ -19,13 +18,14 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<AppDbContext>(options =>options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<IToDoRepository, ToDoRepositories>();
-builder.Services.AddScoped<CTodoCommandHandlers>();
-builder.Services.AddScoped<UTodoCommandHandlers>();
-builder.Services.AddScoped<DTodoCommandHandlers>();
-builder.Services.AddScoped<GetAllTodoquarieHandlers>();
-builder.Services.AddScoped<GetTodoByIdquarieHandlers>();
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IToDoRepository, ToDoRepository>();
+builder.Services.AddScoped<CreateTodoCommandHandler>();
+builder.Services.AddScoped<UpdateTodoCommandHandler>();
+builder.Services.AddScoped<DeleteTodoCommandHandler>();
+builder.Services.AddScoped<GetAllTodoQueryHandler>();
+builder.Services.AddScoped<GetTodoByIdQueryHandler>();
 
 var app = builder.Build();
 
